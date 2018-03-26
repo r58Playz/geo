@@ -178,9 +178,9 @@ def travel(src, tgt):
 
 LOCATIONS = {
     'origin': (0, 0),
-    'home.first': (-352, 193),
-    'home.trees': (-483, 439),
-    'home.desert': (-712, 100),
+    'home-first': (-352, 193),
+    'home-trees': (-483, 439),
+    'home-desert': (-712, 100),
 
     'village': (-899, 86),
 
