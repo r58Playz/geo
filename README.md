@@ -1,2 +1,2 @@
 # geo
-Find your way between two coordinates
+Find your way between two locations in Minecraft

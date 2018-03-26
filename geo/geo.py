@@ -16,6 +16,7 @@ from base import (
 # Data
 # -----------------------------------------------------------------------------
 
+# FIXME: Isn't really constant. Should probably be a parameter instead.
 LOCATIONS = {
     'origin': (0, 0),
 

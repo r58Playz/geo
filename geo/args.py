@@ -52,7 +52,7 @@ class ShowLocations(argparse.Action):
 
 parser = argparse.ArgumentParser(
     prog='geo',
-    description='Find your way between two locations in Minecraft.',
+    description='Find your way between two locations in Minecraft.'
 )
 
 parser.add_argument(
