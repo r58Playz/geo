@@ -1,7 +1,5 @@
 import numpy as np
 
-from terminaltables import SingleTable
-
 
 # -----------------------------------------------------------------------------
 # Constants
@@ -15,13 +13,14 @@ DIRECTIONS = '''
 '''.split()
 
 TIME_UNITS = [
+    ('y', 60 * 60 * 24 * 365),
     ('d', 60 * 60 * 24),
     ('h', 60 * 60),
-    ('m', 60),
+    ('min', 60),
     ('s', 1),
 ]
 
-# Units (meters) per second.
+# Blocks (meters) per second.
 SPEED = [
     ('Walking', 4.3),
     ('Sprinting', 5.6),
@@ -38,7 +37,7 @@ SPEED.sort(key=lambda x: x[1], reverse=True)
 
 
 # -----------------------------------------------------------------------------
-# Internal
+# Functions
 # -----------------------------------------------------------------------------
 
 def distance(point1, point2):
@@ -47,6 +46,8 @@ def distance(point1, point2):
 
 
 def angle_between(source, target):
+    if source == target:
+        return None
     delta = np.subtract(target, source)
     if delta.size != 2:
         raise ValueError('inputs must be 2D')
@@ -90,10 +91,8 @@ def direction_name(direction):
             return 'West'
         elif direction == 'N':
             return 'North'
-        else:
-            raise ValueError()
-    else:
-        raise ValueError()
+
+    raise ValueError(f'invalid direction "{direction}"')
 
 
 def time(seconds):
@@ -114,78 +113,3 @@ def time(seconds):
         return 'Now'
     else:
         return ' '.join(parts)
-
-
-# -----------------------------------------------------------------------------
-# External
-# -----------------------------------------------------------------------------
-
-def travel(src, tgt):
-    print(f'From "{src}" to "{tgt}":')
-    print()
-
-    source = LOCATIONS[src]
-    target = LOCATIONS[tgt]
-
-    d = distance(source, target)
-    a = np.round(np.rad2deg(angle_between(source, target)))
-    h = direction(source, target)
-
-    table = SingleTable([
-        ('Source', source),
-        ('Destination', target),
-        ('Distance', f'{d:.2f}'),
-        ('Angle', f'{a:.0f}°'),
-        ('Direction', h),
-    ], 'Travel Information')
-
-    table.inner_heading_row_border = False
-    table.justify_columns[0] = 'right'
-
-    print(table.table)
-    print()
-
-    print(h, ':', direction_name(h))
-    print()
-
-    data = [
-        ('Method', 'ETA'),
-    ]
-
-    for (k, v) in SPEED:
-        t = time(d / v)
-        data.append((k, t))
-
-    table = SingleTable(data, 'Travel Time')
-    table.justify_columns[0] = 'center'
-    table.justify_columns[1] = 'right'
-
-    print(table.table)
-
-
-# def show_map(scale=1):
-#
-#
-# d**2 = x**2 + y**2
-# (dF)**2 = ...
-# d**2 F**2 = ...
-# d**2 = (x**2 + y**2) / F**2
-
-
-# -----------------------------------------------------------------------------
-# Data
-# -----------------------------------------------------------------------------
-
-LOCATIONS = {
-    'origin': (0, 0),
-    'home-first': (-352, 193),
-    'home-trees': (-483, 439),
-    'home-desert': (-712, 100),
-
-    'village': (-899, 86),
-
-    'pillar-1': (-603, 228),
-    'pillar-2': (-273, -135),
-
-    'castle': (-822, 81),
-}
