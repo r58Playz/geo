@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='geo',
-    version='0.2.0',
+    version='0.2.1-alpha',
     author='DrMentats',
     license='MIT',
     packages=['geo'],

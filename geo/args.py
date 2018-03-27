@@ -1,12 +1,24 @@
 import argparse
 
+from enum import IntEnum
 from terminaltables import SingleTable
 
 from geo import LOCATIONS
 
 
+class Verbosity(IntEnum):
+    QUIET = 0
+    ERROR = 1
+    DEBUG = 2
+
+
+MAX_VERBOSITY = len(Verbosity) - 1
+
+
 def location(arg):
     try:
+        # Because, for argparse, text starting with - is treated as a separate
+        # flag/argument, and the -- pseudo-argument doesn't help here.
         x, y = arg.replace('_', '-').split(',')
         return (float(x), float(y))
     except ValueError:
@@ -23,14 +35,27 @@ class LoadLocations(argparse.Action):
         try:
             with open(value, 'r') as file:
                 for line in file.readlines():
-                    if line.isspace() or line.startswith('#'):
+                    line = line.strip()
+
+                    if not line or line.startswith('#'):
                         continue
+
+                    if args.verbose >= Verbosity.DEBUG:
+                        print('Parsing line:', line)
+
                     name, x, y = line.split()
                     x, y = float(x), float(y)
+
+                    if name in LOCATIONS:
+                        print(f'Warning: overwriting location {name}.')
+
                     LOCATIONS[name] = (x, y)
         except Exception as err:
-            print(f'Load error: {err}')
-            exit(1)
+            if args.verbose >= Verbosity.ERROR:
+                raise
+            else:
+                print(f'Load error: {err}')
+                exit(1)
 
 
 class ShowLocations(argparse.Action):
@@ -46,13 +71,43 @@ class ShowLocations(argparse.Action):
         table.justify_columns[2] = 'right'
 
         print(table.table)
+        print('Total:', len(LOCATIONS))
 
         exit()
 
 
+class IncreaseVerbosity(argparse.Action):
+    warned_once = False
+
+    def __call__(self, parser, args, value, opt=None):
+        old = getattr(args, self.dest)
+
+        if not self.warned_once and old >= MAX_VERBOSITY:
+            print('Warning: using -v/--verbose more than '
+                  f'{MAX_VERBOSITY} times has no effect.')
+            self.warned_once = True
+            return
+
+        setattr(args, self.dest, old + 1)
+
+
 parser = argparse.ArgumentParser(
     prog='geo',
-    description='Find your way between two locations in Minecraft.'
+    description='Find your way between two locations in Minecraft.',
+)
+
+parser.add_argument(
+    '--version',
+    action='version',
+    version='%(prog)s 0.2.1-alpha',  # FIXME: Shouldn't be here.
+)
+
+parser.add_argument(
+    '-v', '--verbose',
+    help='increase debug level (1: error, 2: debug)',
+    nargs=0,
+    action=IncreaseVerbosity,
+    default=0,
 )
 
 parser.add_argument(
@@ -77,8 +132,8 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--list', '--list-locations',
-    help='list all loaded locations, then exit',
+    '-L', '--list',
+    help='list all loaded locations and exit',
     action=ShowLocations,
     nargs=0,
 )

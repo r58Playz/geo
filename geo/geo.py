@@ -52,16 +52,14 @@ def travel(source, target):
         ('Distance', f'{d:.2f}'),
         ('Angle', a),
         ('Direction', h),
+        ('', H),
     ], 'Travel Information')
 
     table.inner_heading_row_border = False
     table.justify_columns[0] = 'right'
 
     print(table.table)
-    print()
-
-    print(h, ':', H)
-    print()
+    # print()
 
     data = [
         ('Method', 'ETA'),
