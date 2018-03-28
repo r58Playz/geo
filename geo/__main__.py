@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from geo import travel
+from lib import travel
 from args import parser
 
 if __name__ == '__main__':

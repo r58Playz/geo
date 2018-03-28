@@ -3,7 +3,7 @@ import argparse
 from enum import IntEnum
 from terminaltables import SingleTable
 
-from geo import LOCATIONS
+from lib import LOCATIONS
 
 
 class Verbosity(IntEnum):
