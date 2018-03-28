@@ -32,8 +32,6 @@ LOCATIONS = {
 # Functions
 # -----------------------------------------------------------------------------
 
-# TODO: Use thousands separators in the distance.
-#       Maybe even in the coordinates.
 def travel(source, target):
     d = distance(source, target)
 
