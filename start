@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-python "$(dirname $0)/geo/__main__.py" $@

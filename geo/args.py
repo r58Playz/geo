@@ -99,7 +99,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     '--version',
     action='version',
-    version='%(prog)s 0.3.0-alpha',  # FIXME: Shouldn't be here.
+    version='%(prog)s 0.3.1-alpha',  # FIXME: Shouldn't be here.
 )
 
 parser.add_argument(
